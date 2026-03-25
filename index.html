@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anki N2-JLPT Test · Legal & Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Shippori+Mincho+B1:wght@400;600;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:     #0d0d0f;
+      --paper:   #faf6ef;
+      --vermil:  #c0392b;
+      --gold:    #b8942a;
+      --muted:   #6b6560;
+      --border:  rgba(184,148,42,.22);
+      --card-bg: rgba(255,252,245,.72);
+      --blur:    saturate(180%) blur(18px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--paper);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── BACKGROUND ──────────────────────────────── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%,  rgba(192,57,43,.13) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 85% 85%,  rgba(184,148,42,.09) 0%, transparent 55%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, #110e0b 0%, #0d0d0f 100%);
+    }
+
+    /* subtle seigaiha (wave-scale) SVG pattern */
+    .bg-pattern {
+      position: fixed; inset: 0; z-index: 0; opacity: .045;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='60' r='28' fill='none' stroke='%23d4a843' stroke-width='1'/%3E%3Ccircle cx='0'  cy='30' r='28' fill='none' stroke='%23d4a843' stroke-width='1'/%3E%3Ccircle cx='60' cy='30' r='28' fill='none' stroke='%23d4a843' stroke-width='1'/%3E%3Ccircle cx='30' cy='0'  r='28' fill='none' stroke='%23d4a843' stroke-width='1'/%3E%3C/svg%3E");
+    }
+
+    /* floating kanji decoration */
+    .kanji-deco {
+      position: fixed; font-family: 'Noto Serif JP', serif;
+      font-size: clamp(6rem, 18vw, 16rem);
+      font-weight: 600; line-height: 1;
+      pointer-events: none; z-index: 0;
+      opacity: .04; color: var(--gold);
+      user-select: none;
+    }
+    .kanji-deco.k1 { top: -2rem; right: -2rem; transform: rotate(12deg); }
+    .kanji-deco.k2 { bottom: 8rem; left: -3rem; transform: rotate(-8deg); font-size: clamp(5rem, 14vw, 13rem); }
+
+    /* ─── WRAPPER ─────────────────────────────────── */
+    .wrapper { position: relative; z-index: 1; }
+
+    /* ─── HERO ────────────────────────────────────── */
+    header {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 4rem 2rem 5rem;
+      text-align: center;
+    }
+
+    .app-badge {
+      display: inline-flex; align-items: center; gap: .55rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .35rem 1rem;
+      font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2.5rem;
+      background: rgba(184,148,42,.07);
+      animation: fadeUp .8s ease both;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--vermil); }
+
+    .hero-jp {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      font-weight: 300; letter-spacing: .35em;
+      color: rgba(255,255,255,.38);
+      margin-bottom: 1rem;
+      animation: fadeUp .9s .1s ease both;
+    }
+
+    h1 {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: clamp(2.6rem, 7vw, 5.5rem);
+      font-weight: 800; line-height: 1.08;
+      letter-spacing: -.01em;
+      background: linear-gradient(135deg, #faf6ef 30%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeUp 1s .2s ease both;
+    }
+
+    .hero-sub {
+      margin-top: 1.4rem;
+      font-size: clamp(.9rem, 2vw, 1.1rem);
+      font-weight: 300; color: rgba(255,255,255,.5);
+      max-width: 46ch; line-height: 1.7;
+      animation: fadeUp 1s .35s ease both;
+    }
+
+    .hero-tags {
+      display: flex; flex-wrap: wrap; gap: .6rem;
+      justify-content: center; margin-top: 2.2rem;
+      animation: fadeUp 1s .5s ease both;
+    }
+    .tag {
+      font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+      padding: .3rem .85rem; border-radius: 3px;
+      border: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.45);
+    }
+    .tag.red   { border-color: rgba(192,57,43,.5); color: #e87c6f; background: rgba(192,57,43,.08); }
+    .tag.gold  { border-color: rgba(184,148,42,.5); color: #d4b44a; background: rgba(184,148,42,.08); }
+
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      color: rgba(255,255,255,.2); font-size: .65rem; letter-spacing: .12em; text-transform: uppercase;
+      animation: pulse 2.4s ease infinite;
+    }
+    .scroll-hint svg { width: 18px; opacity: .5; }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: center; gap: .4rem;
+      padding: .7rem 1rem;
+      background: rgba(13,13,15,.75);
+      backdrop-filter: var(--blur);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    nav a {
+      font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); text-decoration: none;
+      padding: .45rem 1.1rem; border-radius: 3px;
+      transition: color .2s, background .2s;
+    }
+    nav a:hover, nav a.active {
+      color: var(--paper);
+      background: rgba(255,255,255,.07);
+    }
+    nav a.active { color: var(--gold); }
+
+    /* ─── SECTIONS ────────────────────────────────── */
+    main { max-width: 820px; margin: 0 auto; padding: 0 1.5rem 8rem; }
+
+    section {
+      padding-top: 7rem;
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    section.visible { opacity: 1; transform: none; }
+
+    .section-label {
+      display: flex; align-items: center; gap: .9rem;
+      margin-bottom: 2.5rem;
+    }
+    .label-num {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 3.5rem; font-weight: 800; line-height: 1;
+      color: rgba(184,148,42,.18); letter-spacing: -.02em;
+    }
+    .label-text { display: flex; flex-direction: column; gap: .2rem; }
+    .label-jp {
+      font-family: 'Noto Serif JP', serif;
+      font-size: .7rem; letter-spacing: .2em; color: var(--gold); text-transform: uppercase;
+    }
+    .label-en {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800;
+      color: var(--paper); letter-spacing: -.01em; line-height: 1.1;
+    }
+
+    /* divider */
+    .divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(to right, var(--border), transparent);
+      margin-bottom: 2.2rem;
+    }
+
+    /* content prose */
+    .prose {
+      font-size: clamp(.88rem, 2vw, .97rem);
+      line-height: 1.85; color: rgba(255,255,255,.6);
+      font-weight: 300;
+    }
+    .prose h3 {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 1.05rem; font-weight: 600;
+      color: rgba(255,255,255,.88);
+      margin: 2.2rem 0 .7rem;
+      padding-left: .9rem;
+      border-left: 2px solid var(--vermil);
+    }
+    .prose p { margin-bottom: 1.1rem; }
+    .prose a {
+      color: var(--gold); text-decoration: none;
+      border-bottom: 1px solid rgba(184,148,42,.3);
+      transition: border-color .2s;
+    }
+    .prose a:hover { border-color: var(--gold); }
+    .prose ul { padding-left: 1.4rem; margin-bottom: 1.1rem; }
+    .prose ul li { margin-bottom: .45rem; }
+    .prose strong { color: rgba(255,255,255,.82); font-weight: 500; }
+
+    /* highlight box */
+    .highlight-box {
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 4px;
+      padding: 1.2rem 1.5rem;
+      background: rgba(184,148,42,.05);
+      margin: 1.5rem 0;
+      font-size: .88rem; color: rgba(255,255,255,.6);
+      line-height: 1.75;
+    }
+    .highlight-box strong { color: var(--gold); }
+
+    .alert-box {
+      border: 1px solid rgba(192,57,43,.3);
+      border-left: 3px solid var(--vermil);
+      border-radius: 4px;
+      padding: 1.2rem 1.5rem;
+      background: rgba(192,57,43,.05);
+      margin: 1.5rem 0;
+      font-size: .88rem; color: rgba(255,255,255,.6);
+      line-height: 1.75;
+    }
+    .alert-box strong { color: #e87c6f; }
+
+    /* ─── CONTACT CARD ────────────────────────────── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem; margin-top: 2rem;
+    }
+
+    .contact-card {
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 8px;
+      padding: 1.8rem;
+      background: rgba(255,255,255,.03);
+      transition: border-color .25s, transform .25s, background .25s;
+      cursor: default;
+    }
+    .contact-card:hover {
+      border-color: var(--border);
+      background: rgba(184,148,42,.05);
+      transform: translateY(-3px);
+    }
+    .contact-card .icon {
+      width: 38px; height: 38px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    .icon.red  { background: rgba(192,57,43,.15); }
+    .icon.gold { background: rgba(184,148,42,.15); }
+    .icon.blue { background: rgba(80,120,200,.15); }
+    .contact-card h4 {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 1rem; font-weight: 600;
+      color: rgba(255,255,255,.85); margin-bottom: .45rem;
+    }
+    .contact-card p {
+      font-size: .82rem; color: rgba(255,255,255,.42); line-height: 1.6;
+    }
+    .contact-card a {
+      display: inline-block; margin-top: .7rem;
+      font-size: .8rem; color: var(--gold);
+      text-decoration: none; border-bottom: 1px solid rgba(184,148,42,.3);
+      letter-spacing: .03em;
+      transition: border-color .2s;
+    }
+    .contact-card a:hover { border-color: var(--gold); }
+
+    .email-display {
+      margin-top: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      background: rgba(184,148,42,.04);
+    }
+    .email-display .left h3 {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 1rem; color: rgba(255,255,255,.85);
+      border: none; padding: 0; margin: 0 0 .25rem;
+    }
+    .email-display .left p {
+      font-size: .8rem; color: rgba(255,255,255,.38);
+    }
+    .email-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: linear-gradient(135deg, var(--vermil), #a93226);
+      color: white; text-decoration: none;
+      padding: .65rem 1.4rem; border-radius: 5px;
+      font-size: .8rem; font-weight: 500; letter-spacing: .04em;
+      transition: opacity .2s, transform .2s;
+      white-space: nowrap;
+    }
+    .email-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 3rem 2rem;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+    .footer-jp {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.3rem; color: rgba(255,255,255,.12); letter-spacing: .3em;
+    }
+    .footer-line {
+      font-size: .72rem; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(255,255,255,.2);
+    }
+    .footer-line a { color: rgba(255,255,255,.35); text-decoration: none; }
+    .footer-line a:hover { color: var(--gold); }
+
+    /* ─── ANIMATIONS ──────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .2; transform: translateX(-50%) translateY(0); }
+      50%       { opacity: .5; transform: translateX(-50%) translateY(5px); }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 560px) {
+      nav a { padding: .4rem .7rem; font-size: .68rem; }
+      .email-display { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-pattern"></div>
+<span class="kanji-deco k1">語</span>
+<span class="kanji-deco k2">試</span>
+
+<div class="wrapper">
+
+  <!-- ── HERO ── -->
+  <header id="home">
+    <div class="app-badge">
+      <span class="badge-dot"></span>
+      iOS App · Apple Intelligence · On-Device AI
+    </div>
+    <p class="hero-jp">日本語能力試験 N2</p>
+    <h1>Anki N2-JLPT Test</h1>
+    <p class="hero-sub">
+      The first JLPT N2 app with a fully on-device AI Study Coach powered by Apple Intelligence.
+      No servers. No account. Your data never leaves your device.
+    </p>
+    <div class="hero-tags">
+      <span class="tag red">AI Study Coach</span>
+      <span class="tag gold">921 Vocabulary Cards</span>
+      <span class="tag">30 Full Practice Tests</span>
+      <span class="tag">13 Languages</span>
+      <span class="tag red">Privacy First</span>
+    </div>
+
+    <div class="scroll-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+      Scroll
+    </div>
+  </header>
+
+  <!-- ── NAV ── -->
+  <nav id="sticky-nav">
+    <a href="#privacy"  class="nav-link active">Privacy Policy</a>
+    <a href="#terms"    class="nav-link">Terms of Use</a>
+    <a href="#contact"  class="nav-link">Contact & Support</a>
+  </nav>
+
+  <!-- ── CONTENT ── -->
+  <main>
+
+    <!-- ── PRIVACY POLICY ── -->
+    <section id="privacy" class="reveal">
+      <div class="section-label">
+        <span class="label-num">01</span>
+        <div class="label-text">
+          <span class="label-jp">プライバシーポリシー</span>
+          <span class="label-en">Privacy Policy</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="highlight-box">
+        <strong>tl;dr —</strong> We collect nothing. We know nothing. The app runs entirely on your device.
+        The AI coach is powered by Apple Intelligence and never connects to any server.
+      </div>
+
+      <div class="prose">
+        <p><em>Last updated: June 2025</em></p>
+
+        <h3>1. Information We Do Not Collect</h3>
+        <p>
+          <strong>Anki N2-JLPT Test</strong> does not collect, transmit, store, or share any personal data whatsoever.
+          We have no servers, no analytics pipeline, no backend. There is no account to create and no login required.
+        </p>
+        <ul>
+          <li>No name, email address, or contact information</li>
+          <li>No device identifiers or advertising IDs</li>
+          <li>No usage analytics, crash reports sent to us, or telemetry</li>
+          <li>No location data</li>
+          <li>No purchase history beyond what Apple manages directly</li>
+        </ul>
+
+        <h3>2. Your Study Data</h3>
+        <p>
+          All study progress, test scores, flashcard performance, streak data, and AI-generated study plans
+          are stored exclusively in your device's local storage (Core Data / iCloud sync if you have enabled
+          iCloud on your device). This data is yours — we never access it, and it never leaves your device
+          unless you choose to back it up yourself via iCloud.
+        </p>
+
+        <h3>3. AI Study Coach — Apple Intelligence</h3>
+        <p>
+          The AI Study Coach feature is powered by <strong>Apple's on-device language model</strong>
+          (requires iOS 26+ and Apple Intelligence enabled). All AI inference happens locally on your
+          processor. No prompts, responses, performance data, or any other content is sent to Anthropic,
+          Apple's cloud, or any third party. Apple's own privacy commitments for Apple Intelligence apply —
+          see <a href="https://www.apple.com/privacy/" target="_blank" rel="noopener">apple.com/privacy</a>.
+        </p>
+
+        <h3>4. Audio</h3>
+        <p>
+          Native Japanese audio is bundled within the app bundle itself. No network request is made to
+          stream or fetch audio content. The microphone is never accessed.
+        </p>
+
+        <h3>5. Subscriptions & Purchases</h3>
+        <p>
+          Pro subscriptions are processed entirely by <strong>Apple's App Store</strong> via StoreKit.
+          We never see your payment card details, Apple ID, or transaction information. Subscription
+          management is handled through your Apple ID settings.
+        </p>
+
+        <h3>6. Third-Party SDKs</h3>
+        <p>
+          The app contains no third-party analytics SDKs (no Firebase, no Mixpanel, no Amplitude,
+          no Facebook SDK, no Crashlytics). Apple's default crash reporting (opt-in by users in iOS settings)
+          may collect anonymised diagnostics governed by Apple's own privacy policy.
+        </p>
+
+        <h3>7. Children</h3>
+        <p>
+          The app does not knowingly collect information from anyone, including children under 13.
+          Because no data is collected from any user, the app is safe for users of all ages.
+        </p>
+
+        <h3>8. Changes to This Policy</h3>
+        <p>
+          If we ever change this policy, we will update the date at the top of this page and post
+          the new version here. Continued use of the app after changes constitutes acceptance.
+        </p>
+
+        <h3>9. Contact</h3>
+        <p>
+          Privacy questions? Email us at
+          <a href="mailto:important041994@gmail.com">important041994@gmail.com</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── TERMS OF USE ── -->
+    <section id="terms" class="reveal">
+      <div class="section-label">
+        <span class="label-num">02</span>
+        <div class="label-text">
+          <span class="label-jp">利用規約</span>
+          <span class="label-en">Terms of Use</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="alert-box">
+        <strong>Apple EULA —</strong> This app is subject to Apple's standard App Store End User License Agreement.
+        By downloading or using the app you agree to the
+        <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener" style="color:#e87c6f; border-bottom-color:rgba(192,57,43,.3);">
+          Apple Standard EULA
+        </a>.
+      </div>
+
+      <div class="prose">
+        <p><em>Last updated: June 2025</em></p>
+
+        <h3>1. Acceptance of Terms</h3>
+        <p>
+          By downloading, installing, or using <strong>Anki N2-JLPT Test</strong> ("the App"), you agree to be
+          bound by these Terms of Use and Apple's
+          <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">Standard EULA</a>.
+          If you do not agree, do not use the App.
+        </p>
+
+        <h3>2. License Grant</h3>
+        <p>
+          We grant you a personal, non-exclusive, non-transferable, revocable license to use the App
+          on Apple devices you own or control, solely for your personal, non-commercial study purposes.
+        </p>
+
+        <h3>3. Free vs Pro Subscription</h3>
+        <p>
+          The App offers a free tier and a Pro subscription (monthly or annual) unlocking additional content.
+        </p>
+        <ul>
+          <li><strong>Free</strong> — first 10 lesson groups, first 3 test papers, quiz mode, audio, streak tracking, and progress stats.</li>
+          <li><strong>Pro</strong> — all 30 test papers, all lesson groups, streak freeze, JLPT readiness score, custom card editor, and full offline access.</li>
+        </ul>
+        <p>
+          Subscriptions renew automatically unless cancelled at least 24 hours before the end of the billing period.
+          Manage or cancel via <strong>Apple ID → Subscriptions</strong>. No refunds are issued for partial periods
+          except as required by applicable law.
+        </p>
+
+        <h3>4. Intellectual Property</h3>
+        <p>
+          All content within the App — including vocabulary cards, questions, audio recordings, study materials,
+          UI design, and AI-generated study plans — is the intellectual property of the developer or its licensors.
+          You may not copy, reproduce, distribute, or create derivative works from any part of the App's content.
+        </p>
+
+        <h3>5. Acceptable Use</h3>
+        <p>You agree not to:</p>
+        <ul>
+          <li>Reverse-engineer, decompile, or disassemble the App</li>
+          <li>Attempt to extract vocabulary databases or audio assets</li>
+          <li>Use the App for commercial tutoring or redistribution without written permission</li>
+          <li>Circumvent in-app purchase mechanisms</li>
+        </ul>
+
+        <h3>6. Educational Disclaimer</h3>
+        <p>
+          The App is designed as a <strong>study aid</strong>. While we strive for accuracy, we make no
+          guarantee that use of the App will result in passing the JLPT N2 examination or any other test.
+          The AI Study Coach generates personalised plans based on your in-app performance and is provided
+          as a study suggestion tool, not a certified educational programme.
+        </p>
+
+        <h3>7. Availability & Updates</h3>
+        <p>
+          We reserve the right to modify, suspend, or discontinue the App at any time without notice.
+          We may update these Terms at any time; continued use constitutes acceptance of the updated Terms.
+        </p>
+
+        <h3>8. Limitation of Liability</h3>
+        <p>
+          To the fullest extent permitted by law, we are not liable for any indirect, incidental, special,
+          or consequential damages arising from your use of, or inability to use, the App.
+        </p>
+
+        <h3>9. Governing Law</h3>
+        <p>
+          These Terms are governed by applicable law. Disputes shall be resolved in accordance with
+          Apple's App Store dispute resolution procedures where applicable.
+        </p>
+
+        <h3>10. Apple's Standard EULA</h3>
+        <p>
+          This App is licensed to you subject to Apple's
+          <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">
+            Standard End User License Agreement
+          </a>.
+          In the event of any conflict between these Terms and the Apple EULA, the Apple EULA shall prevail
+          with respect to App Store terms.
+        </p>
+
+        <h3>11. Contact</h3>
+        <p>
+          Legal inquiries: <a href="mailto:important041994@gmail.com">important041994@gmail.com</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ── CONTACT & SUPPORT ── -->
+    <section id="contact" class="reveal">
+      <div class="section-label">
+        <span class="label-num">03</span>
+        <div class="label-text">
+          <span class="label-jp">サポート</span>
+          <span class="label-en">Contact & Support</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="prose">
+        <p>
+          We're a small independent team passionate about helping learners conquer the JLPT N2.
+          If you have a question, bug report, or feature request — we'd love to hear from you.
+        </p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="icon red">🐛</div>
+          <h4>Bug Reports</h4>
+          <p>Found something broken? Describe the issue, your device model, and iOS version and we'll investigate.</p>
+          <a href="mailto:important041994@gmail.com?subject=Bug Report - Anki N2-JLPT">Send bug report →</a>
+        </div>
+        <div class="contact-card">
+          <div class="icon gold">💡</div>
+          <h4>Feature Requests</h4>
+          <p>Have an idea that would make your study sessions better? We actively incorporate user suggestions.</p>
+          <a href="mailto:important041994@gmail.com?subject=Feature Request - Anki N2-JLPT">Share your idea →</a>
+        </div>
+        <div class="contact-card">
+          <div class="icon blue">🔐</div>
+          <h4>Privacy Inquiries</h4>
+          <p>Questions about how the AI coach works on-device, or anything related to data and privacy.</p>
+          <a href="mailto:important041994@gmail.com?subject=Privacy Inquiry - Anki N2-JLPT">Ask us →</a>
+        </div>
+        <div class="contact-card">
+          <div class="icon gold">💳</div>
+          <h4>Subscription Help</h4>
+          <p>Manage subscriptions through Apple ID settings. For billing issues, Apple Support handles transactions.</p>
+          <a href="https://support.apple.com/billing" target="_blank" rel="noopener">Apple Billing Support →</a>
+        </div>
+      </div>
+
+      <div class="email-display">
+        <div class="left">
+          <h3>Direct Email</h3>
+          <p>We typically respond within 1–2 business days.</p>
+        </div>
+        <a href="mailto:important041994@gmail.com" class="email-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          important041994@gmail.com
+        </a>
+      </div>
+
+      <div class="prose" style="margin-top:2rem;">
+        <h3>Frequently Asked Questions</h3>
+
+        <p><strong>Is the AI coach really on-device?</strong><br>
+        Yes. It uses Apple's on-device language model introduced in iOS 26 with Apple Intelligence.
+        No data is sent to any server — not ours, not Apple's cloud.</p>
+
+        <p><strong>Which iOS version do I need?</strong><br>
+        iOS 26 or later is required for the AI Study Coach feature. All other features work on iOS 16+.</p>
+
+        <p><strong>Can I switch the study plan language?</strong><br>
+        Yes — your AI-generated plan can be translated into any of the 13 supported languages with a single tap.</p>
+
+        <p><strong>How do I cancel my Pro subscription?</strong><br>
+        Go to <strong>Settings → [Your Name] → Subscriptions</strong> on your iPhone and select Anki N2-JLPT Test.
+        You can cancel there at any time. Your Pro access continues until the end of the paid period.</p>
+
+        <p><strong>Where is my study data stored?</strong><br>
+        Entirely on your device. If you have iCloud Drive enabled, iOS may back up the data to your personal
+        iCloud account — this is controlled by your own iCloud settings and never accessible by us.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-jp">語・試・力</div>
+    <p class="footer-line">
+      © 2025 Anki N2-JLPT Test &nbsp;·&nbsp;
+      <a href="#privacy">Privacy Policy</a> &nbsp;·&nbsp;
+      <a href="#terms">Terms of Use</a> &nbsp;·&nbsp;
+      <a href="mailto:important041994@gmail.com">Contact</a>
+    </p>
+    <p class="footer-line" style="font-size:.65rem; opacity:.5;">
+      Made with ❤ for JLPT learners worldwide
+    </p>
+  </footer>
+
+</div><!-- /wrapper -->
+
+<script>
+  /* ── Reveal on scroll ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── Active nav highlight ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('.nav-link');
+
+  const navObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+        });
+      }
+    });
+  }, { rootMargin: '-35% 0px -55% 0px' });
+
+  sections.forEach(s => navObs.observe(s));
+</script>
+
+</body>
+</html>
